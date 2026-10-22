@@ -1,2 +1,1 @@
-# frontend
-this is frontend for ProsteFakty
+## Mobile-UI implementation of the ProsteFakty app
