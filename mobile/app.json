@@ -28,7 +28,10 @@
           "cameraPermission": "Aplikacja używa aparatu do rozpoznawania posłów.",
           "recordAudioAndroid": false
         }
-      ]
-    ]
+      ],
+      "expo-router",
+      "expo-font"
+    ],
+    "scheme": "prostefakty"
   }
 }

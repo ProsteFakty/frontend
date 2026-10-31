@@ -1,5 +1,5 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { StatusBar } from 'expo-status-bar';
+import { Stack, useIsFocused } from 'expo-router';
 import { useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -11,8 +11,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { API_URL, Politician, recognize, RecognizeResponse } from './src/api';
+import { API_URL, Politician, recognize, RecognizeResponse } from '@/api';
 
 type State =
   | { kind: 'camera' }
@@ -20,8 +19,10 @@ type State =
   | { kind: 'result'; data: RecognizeResponse }
   | { kind: 'error'; message: string };
 
-export default function App() {
+export default function Scanner() {
   const [permission, requestPermission] = useCameraPermissions();
+  // Only one camera preview can be active, so unmount it when another tab is shown.
+  const isFocused = useIsFocused();
   const [state, setState] = useState<State>({ kind: 'camera' });
   const camera = useRef<CameraView>(null);
 
@@ -51,7 +52,7 @@ export default function App() {
   } else if (state.kind === 'camera') {
     content = (
       <View style={styles.fill}>
-        <CameraView ref={camera} style={styles.fill} facing="back" />
+        {isFocused && <CameraView ref={camera} style={styles.fill} facing="back" />}
         <View style={styles.bottom}>
           <Button title="Skanuj" onPress={scan} />
           <Text style={styles.small}>API: {API_URL}</Text>
@@ -86,12 +87,10 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.fill}>
-        <StatusBar style="auto" />
-        {content}
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <View style={styles.fill}>
+      <Stack.Screen options={{ title: 'Skanuj' }} />
+      {content}
+    </View>
   );
 }
 
