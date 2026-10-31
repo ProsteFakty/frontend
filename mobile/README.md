@@ -18,3 +18,20 @@ Minimal app: take a photo → `POST /api/politicians/recognize` → show the MP'
 
 The app calls `http://<PC IP from Expo>:8000` by default. Override with
 `EXPO_PUBLIC_API_URL=http://192.168.x.x:8000 npx expo start`. The URL in use is shown under the "Skanuj" button.
+
+## Navigation (Expo Router, `src/app/`)
+
+```
+src/app/
+  _layout.tsx         root stack
+  (tabs)/
+    _layout.tsx       bottom tabs: Aktualności (default), Posiedzenia, Wyszukiwarka, Skanuj
+    (news)/           _layout.tsx (stack) + index.tsx
+    (sittings)/       _layout.tsx (stack) + index.tsx
+    (search)/         _layout.tsx (stack) + index.tsx
+    (scan)/           _layout.tsx (stack) + index.tsx (politician scanner)
+```
+
+Each tab has its own stack, so detail screens added to a tab's folder later open inside that tab.
+Screens set their header title with `<Stack.Screen options={...} />`. News, sittings and search
+are placeholders for now.
