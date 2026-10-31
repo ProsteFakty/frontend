@@ -1,7 +1,6 @@
 import Constants from 'expo-constants';
 import { File } from 'expo-file-system';
 
-// Response shape of POST /api/politicians/recognize (backend: feat/politician-recognition).
 export type Politician = {
   full_name: string;
   first_name: string;

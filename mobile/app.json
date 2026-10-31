@@ -30,7 +30,8 @@
         }
       ],
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "expo-image"
     ],
     "scheme": "prostefakty"
   }
