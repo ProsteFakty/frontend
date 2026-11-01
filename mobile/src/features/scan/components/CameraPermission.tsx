@@ -1,5 +1,5 @@
 import { Image, ImageSource } from 'expo-image';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { colors } from '@/theme';
 import Button from '@/components/ui/Button';
 

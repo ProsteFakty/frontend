@@ -1,6 +1,6 @@
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { useCameraPermissions } from 'expo-camera';
 import { Stack, useIsFocused } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { API_URL, Politician, recognize, RecognizeResponse } from '@/api';
 import { CameraPermission } from '@/features/scan/components/CameraPermission';
+import CameraScanner from '@/features/scan/components/CameraScanner';
 
 type State =
   | { kind: 'camera' }
@@ -22,17 +23,13 @@ type State =
 
 export default function Scanner() {
   const [permission, requestPermission] = useCameraPermissions();
-  // Only one camera preview can be active, so unmount it when another tab is shown.
   const isFocused = useIsFocused();
   const [state, setState] = useState<State>({ kind: 'camera' });
-  const camera = useRef<CameraView>(null);
 
-  async function scan() {
-    if (!camera.current) return;
+  async function scan(photoUri: string) {
+    setState({ kind: 'loading' });
     try {
-      const photo = await camera.current.takePictureAsync({ quality: 0.7 });
-      setState({ kind: 'loading' });
-      setState({ kind: 'result', data: await recognize(photo.uri) });
+      setState({ kind: 'result', data: await recognize(photoUri) });
     } catch (e) {
       setState({ kind: 'error', message: e instanceof Error ? e.message : String(e) });
     }
@@ -40,26 +37,20 @@ export default function Scanner() {
 
   const reset = () => setState({ kind: 'camera' });
 
+  async function allowCamera() {
+    const result = await requestPermission();
+    if (!result.granted && !result.canAskAgain) Linking.openSettings();
+  }
+
+  const isScanning = Boolean(permission?.granted) && state.kind === 'camera';
+
   let content: React.ReactNode;
   if (!permission) {
     content = <ActivityIndicator />;
   } else if (!permission.granted) {
-    content = (
-      // Request camera permission if possible, otherwise redirect to app settings.
-      <CameraPermission
-        onAllow={permission.canAskAgain ? requestPermission : Linking.openSettings}
-      />
-    );
+    content = <CameraPermission onAllow={allowCamera} />;
   } else if (state.kind === 'camera') {
-    content = (
-      <View style={styles.fill}>
-        {isFocused && <CameraView ref={camera} style={styles.fill} facing="back" />}
-        <View style={styles.bottom}>
-          <Button title="Skanuj" onPress={scan} />
-          <Text style={styles.small}>API: {API_URL}</Text>
-        </View>
-      </View>
-    );
+    content = <CameraScanner active={isFocused} onCapture={scan} />;
   } else if (state.kind === 'loading') {
     content = (
       <View style={styles.center}>
@@ -89,7 +80,7 @@ export default function Scanner() {
 
   return (
     <View style={styles.fill}>
-      <Stack.Screen options={{ title: 'Skanuj' }} />
+      <Stack.Screen options={{ title: 'Skanuj', headerShown: !isScanning }} />
       {content}
     </View>
   );
@@ -130,7 +121,6 @@ function PoliticianInfo({ p, similarity }: { p: Politician; similarity: number |
 const styles = StyleSheet.create({
   fill: { flex: 1 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, padding: 16 },
-  bottom: { padding: 16, gap: 8 },
   small: { fontSize: 11, color: '#666', textAlign: 'center' },
   result: { padding: 16, gap: 16 },
   card: { gap: 4 },

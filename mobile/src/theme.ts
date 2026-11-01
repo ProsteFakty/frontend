@@ -1,6 +1,8 @@
 export const colors = {
   bgApp: '#fbf6ee',
   bgSurface: '#ffffff',
+  bgDark: '#2b2118',
+  overlayLight: 'rgba(255,255,255,0.16)',
   borderDefault: '#e8dcc8',
   brandPrimary: '#8a5a1f', 
   brandSoft: '#f6e7c8',
