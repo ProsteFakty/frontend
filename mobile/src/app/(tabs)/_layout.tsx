@@ -6,10 +6,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '@/theme';
 
 const TABS: { name: string; title: string; icon: ImageSource }[] = [
-  { name: '(news)', title: 'Aktualności', icon: require('../../../assets/icons/tabs/news.svg') },
-  { name: '(sittings)', title: 'Posiedzenia', icon: require('../../../assets/icons/tabs/sittings.svg') },
-  { name: '(search)', title: 'Wyszukiwarka', icon: require('../../../assets/icons/tabs/search.svg') },
-  { name: '(scan)', title: 'Skanuj', icon: require('../../../assets/icons/tabs/scan.svg') },
+  { name: '(news)', title: 'Aktualności', icon: require('@assets/icons/tabs/news.svg') },
+  { name: '(sittings)', title: 'Posiedzenia', icon: require('@assets/icons/tabs/sittings.svg') },
+  { name: '(search)', title: 'Wyszukiwarka', icon: require('@assets/icons/tabs/search.svg') },
+  { name: '(scan)', title: 'Skanuj', icon: require('@assets/icons/tabs/scan.svg') },
 ];
 
 export default function TabLayout() {
