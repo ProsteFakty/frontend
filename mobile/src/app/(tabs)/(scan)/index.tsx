@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import { API_URL, Politician, recognize, RecognizeResponse } from '@/api';
+import { CameraPermission } from '@/features/scan/components/CameraPermission';
 
 type State =
   | { kind: 'camera' }
@@ -44,10 +45,10 @@ export default function Scanner() {
     content = <ActivityIndicator />;
   } else if (!permission.granted) {
     content = (
-      <View style={styles.center}>
-        <Text>Aplikacja potrzebuje dostępu do aparatu.</Text>
-        <Button title="Zezwól" onPress={requestPermission} />
-      </View>
+      // Request camera permission if possible, otherwise redirect to app settings.
+      <CameraPermission
+        onAllow={permission.canAskAgain ? requestPermission : Linking.openSettings}
+      />
     );
   } else if (state.kind === 'camera') {
     content = (
